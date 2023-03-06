@@ -1,37 +1,53 @@
-plugins {
-    id 'com.android.application'
-}
+apply plugin: 'com.android.library'
 
 android {
-    compileSdk 33
-    ndkVersion '25.1.8937393'
+compileSdkVersion 33
+buildToolsVersion "33.0.0"
 
-    defaultConfig {
-        applicationId "com.temper"
-        minSdk 21
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
-    }
-	
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-	externalNativeBuild {
-        ndkBuild {
-            path 'src/main/cpp/Android.mk'
-        }
-    }
+defaultConfig {
+minSdkVersion 21
+targetSdkVersion 33
+ndk {
+abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+}
+}
+
+sourceSets.main {
+jni.srcDirs = ['src/main/cpp']
+jniLibs.srcDirs = ['src/main/jniLibs']
+}
+
+externalNativeBuild {
+cmake {
+path "CMakeLists.txt"
+}
+}
 }
 
 dependencies {
-	// CodeAssist does NOT support adding dependencies here,
-	// try using the library manager instead
+implementation fileTree(dir: 'libs', include: ['*.jar'])
+// Add OpenSSL dependency
+implementation 'org.conscrypt:conscrypt-android:2.5.1'
+}
+
+// Define linker flags for OpenSSL
+android {
+defaultConfig {
+externalNativeBuild {
+cmake {
+arguments "-DANDROID_STL=c++_shared",
+"-DANDROID_TOOLCHAIN=clang",
+"-DANDROID_ARM_MODE=arm",
+"-DANDROID_PLATFORM=android-21",
+"-DANDROID_LD_LIBRARY_PATH=${file("${projectDir}/src/main/jniLibs")}".toString()
+}
+}
+}
+}
+
+// Define external build command for OpenSSL
+externalNativeBuild {
+cmake {
+path "CMakeLists.txt"
+}
 }
