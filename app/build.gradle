@@ -11,11 +11,6 @@ ndk {
 abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
 }
 }
-externalNativeBuild {
-            cmake {
-                arguments '-std=c++17'
-            }
-        }
 sourceSets.main {
 jni.srcDirs = ['src/main/cpp']
 jniLibs.srcDirs = ['src/main/jniLibs']
