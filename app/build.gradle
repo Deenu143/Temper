@@ -44,3 +44,8 @@ arguments "-DANDROID_STL=c++_shared",
 }
 
 // Define external build command for OpenSSL
+externalNativeBuild {
+    cmake {
+        path "CMakeLists.txt"
+    }
+}
