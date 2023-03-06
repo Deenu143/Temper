@@ -16,12 +16,6 @@ sourceSets.main {
 jni.srcDirs = ['src/main/cpp']
 jniLibs.srcDirs = ['src/main/jniLibs']
 }
-
-externalNativeBuild {
-cmake {
-path "CMakeLists.txt"
-}
-}
 }
 
 dependencies {
@@ -46,8 +40,3 @@ arguments "-DANDROID_STL=c++_shared",
 }
 
 // Define external build command for OpenSSL
-externalNativeBuild {
-cmake {
-path "CMakeLists.txt"
-}
-}
