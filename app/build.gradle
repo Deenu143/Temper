@@ -1,46 +1,19 @@
+apply plugin: 'com.android.application'
+
+android {
+    // ...
+}
+
+// Add this line to enable the ndk plugin
 apply plugin: 'com.android.library'
 
-android {
-compileSdkVersion 33
-buildToolsVersion "33.0.0"
-
-defaultConfig {
-minSdkVersion 21
-targetSdkVersion 33
-ndk {
-abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-}
-}
-sourceSets.main {
-jni.srcDirs = ['src/main/cpp']
-jniLibs.srcDirs = ['src/main/jniLibs']
-}
-}
-
-dependencies {
-implementation fileTree(dir: 'libs', include: ['*.jar'])
-// Add OpenSSL dependency
-implementation 'org.conscrypt:conscrypt-android:2.5.1'
-}
-
-// Define linker flags for OpenSSL
-android {
-defaultConfig {
-externalNativeBuild {
-cmake {
-arguments "-DANDROID_STL=c++_shared",
-"-DANDROID_TOOLCHAIN=clang",
-"-DANDROID_ARM_MODE=arm",
-"-DANDROID_PLATFORM=android-21",
-"-DANDROID_LD_LIBRARY_PATH=${file("${projectDir}/src/main/jniLibs")}".toString()
-}
-}
-}
-}
-
-// Define external build command for OpenSSL
+// Define the external native build configuration
 externalNativeBuild {
     cmake {
+        // Set the path to your CMakeLists.txt file
         path "CMakeLists.txt"
     }
 }
+
+// ...
+
