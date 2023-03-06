@@ -24,10 +24,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 	externalNativeBuild {
-	cmake {
-	path "src/main/cpp/CMakeLists.txt"
-	}
-	}
+        ndkBuild {
+            path 'Android.mk'
+        }
+    }
 }
 
 dependencies {
