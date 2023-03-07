@@ -18,8 +18,9 @@ externalNativeBuild {
     cmake {
         // Set the path to your CMakeLists.txt file
         path "CMakeLists.txt"
+           }
+        }
     }
-}
 }
 // ...
 
