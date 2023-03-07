@@ -1,9 +1,3 @@
-apply plugin: 'com.android.application'
-
-android {
-    // ...
-}
-
 // Add this line to enable the ndk plugin
 apply plugin: 'com.android.library'
 
