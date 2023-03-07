@@ -1,26 +1,74 @@
-// Add this line to enable the ndk plugin
-apply plugin: 'com.android.library'
+/*
+ * Copyright (C) 2020 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+plugins {
+    id  'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
-       compileSdkVersion 33
-       buildToolsVersion "33.0.0"
-      
-defaultConfig {
-             minSdkVersion 21
-             targetSdkVersion 33
-    
-ndk {
-     abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-}
+    compileSdk 33
+    ndkVersion '25.1.8937393'
 
-// Define the external native build configuration
-externalNativeBuild {
-    cmake {
-        // Set the path to your CMakeLists.txt file
-        path "CMakeLists.txt"
-           }
+    buildFeatures {
+        prefab = true
+        viewBinding = true
+    }
+
+    defaultConfig {
+        applicationId "com.example.com.example.prefabdependency"
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 1
+        versionName "1.0"
+
+        externalNativeBuild {
+            if (!project.hasProperty("ndkBuild")) {
+                cmake {
+                    arguments "-DANDROID_STL=c++_shared"
+                }
+            }
         }
     }
-}
-// ...
 
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        if (!project.hasProperty("ndkBuild")) {
+            cmake {
+                path "src/main/cpp/CMakeLists.txt"
+            }
+        } else {
+            ndkBuild {
+                path "src/main/cpp/Android.mk"
+            }
+        }
+    }
+    namespace 'com.example.prefabdependency'
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.21"
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation "com.android.ndk.thirdparty:jsoncpp:1.8.4-alpha-1"
+}
